@@ -44,5 +44,5 @@ jobs:
           REMOTE_USER: 'root'
           TARGET: '/www/wwwroot/www.tdywork.cn' # ⚠️请把这里改成你在宝塔中真实的网站根目录路径！
           # 👇 添加以下两行：开启压缩传输并保持时间戳，实现精准增量更新
-          ARGS: '-avzr --delete'
+          ARGS: '-avzr --delete --exclude=.user.ini'
           SCRIPT_AFTER: "echo 'Deployment complete!'"
