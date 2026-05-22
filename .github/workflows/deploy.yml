@@ -1,5 +1,10 @@
 name: Deploy Vue Project to BT Panel
 
+# 👇 增加以下配置：同一时间同一个分支只允许跑一个任务，新的会顶替掉旧的
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 # 触发条件：当 main 分支有 push 时触发（如果你的主分支叫 master，请把下面改成 master）
 on:
   push:
