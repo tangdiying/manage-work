@@ -45,7 +45,14 @@ jobs:
 
       # 5. 设置国内镜像源并安装依赖
       - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          # 使用 sed 命令，把 pnpm-lock.yaml 里的 npmmirror 域名动态替换为官方域名
+          if [ -f pnpm-lock.yaml ]; then
+            sed -i 's/registry.npmmirror.com/registry.npmjs.org/g' pnpm-lock.yaml
+          fi
+
+          # 执行严格锁定安装
+          pnpm install --frozen-lockfile
 
       # 3. 安装依赖并打包
       - name: Build Project
