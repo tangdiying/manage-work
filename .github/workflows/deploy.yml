@@ -1,0 +1,41 @@
+name: Deploy Vue Project to BT Panel
+
+# 触发条件：当 main 分支有 push 时触发（如果你的主分支叫 master，请把下面改成 master）
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 拉取 GitHub 仓库中的最新代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 安装 Node.js 环境（这里选了 v18，你可以根据你的 Vue 项目需求调整版本）
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      # 3. 安装依赖并打包
+      - name: Install dependencies and Build
+        run: |
+          npm install
+          npm run build
+
+      # 4. 通过 SSH/SFTP 把打包好的 dist 目录传送到宝塔服务器
+      - name: Deploy to BT Server
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: '-rlgoDzvc --delete'
+          SOURCE: 'dist/' # 你的 Vue 打包产物目录
+          REMOTE_HOST: ${{ secrets.SERVER_HOST }}
+          REMOTE_PORT: ${{ secrets.SERVER_PORT }}
+          REMOTE_USER: 'root'
+          TARGET: '/www/wwwroot/www.tdywork.cn' # ⚠️请把这里改成你在宝塔中真实的网站根目录路径！
