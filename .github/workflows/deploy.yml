@@ -26,26 +26,32 @@ jobs:
         with:
           node-version: 18
 
-      # 👇 第一步：检测 package-lock.json 是否变过，如果没变，直接从 GitHub 缓存里把 node_modules 捞出来
-      - name: Cache Node Modules
-        id: npm-cache
+      # 3. 安装并配置 pnpm
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9 # 也可以指定具体版本，如 9.1.0。如果不写 version 会默认安装最新版
+          run_install: false
+
+      # 4. 针对于 pnpm 的缓存机制优化
+      # 核心逻辑：以 pnpm-lock.yaml 的 MD5 哈希值为 Key。只要依赖没变，直接复用 store 缓存
+      - name: Cache Pnpm Modules
         uses: actions/cache@v4
         with:
-          path: node_modules
-          # 核心逻辑：以 package-lock.json 的 MD5 哈希值为 Key。只要文件没改，Key 就不变，缓存就命中！
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.local/share/pnpm/store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-pnpm-store-
 
-      # 👇 第二步：聪明的安装环节
-      # if 判断：只有当上面的缓存“未命中”（steps.npm-cache.outputs.cache-hit != 'true'）时，才执行安装
+      # 5. 设置国内镜像源并安装依赖
       - name: Install Dependencies
-        if: steps.npm-cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: |
+          pnpm config set registry https://registry.npmmirror.com
+          pnpm install --frozen-lockfile
 
       # 3. 安装依赖并打包
       - name: Build Project
-        run: npm run build:dev
+        run: pnpm run build:dev
 
       # 4. 通过 SSH/SFTP 把打包好的 dist 目录传送到宝塔服务器
       - name: Deploy to BT Server
@@ -59,4 +65,7 @@ jobs:
           TARGET: '/www/wwwroot/www.tdywork.cn/frontend' # ⚠️请把这里改成你在宝塔中真实的网站根目录路径！
           # 👇 添加以下两行：开启压缩传输并保持时间戳，实现精准增量更新
           ARGS: '-avzr --delete --exclude=.user.ini'
-          SCRIPT_AFTER: "echo 'Deployment complete!'"
+          SCRIPT_AFTER: |
+            chown -R www:www /www/wwwroot/www.tdywork.cn/frontend
+            chmod -R 755 /www/wwwroot/www.tdywork.cn/frontend
+            echo 'Deployment complete!'
