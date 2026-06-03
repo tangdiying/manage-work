@@ -222,52 +222,36 @@ let projects = reactive<Project[]>([])
 const getProject = async () => {
   const data = [
     {
-      name: 'ruoyi-vue-pro',
+      name: 'manage-java-mini',
       icon: 'simple-icons:springboot',
-      message: 'github.com/YunaiV/ruoyi-vue-pro',
-      personal: 'Spring Boot 单体架构',
+      message: 'github.com/tangdiying/manage-java-mini',
+      personal: 'OA管理后台',
       time: new Date('2025-01-02'),
       color: '#6DB33F'
     },
     {
-      name: 'yudao-ui-admin-vue3',
+      name: 'manage-java',
+      icon: 'simple-icons:springboot',
+      message: 'github.com/tangdiying/manage-java',
+      personal: 'OA管理后台',
+      time: new Date('2025-01-02'),
+      color: '#6DB33F'
+    },
+    {
+      name: 'shouye',
       icon: 'ep:element-plus',
-      message: 'github.com/yudaocode/yudao-ui-admin-vue3',
-      personal: 'Vue3 + element-plus 管理后台',
+      message: 'github.com/tangdiying/shouye',
+      personal: '首页',
       time: new Date('2025-02-03'),
       color: '#409EFF'
     },
     {
-      name: 'yudao-ui-mall-uniapp',
+      name: 'manage-work',
       icon: 'icon-park-outline:mall-bag',
-      message: 'github.com/yudaocode/yudao-ui-mall-uniapp',
-      personal: 'Vue3 + uniapp 商城手机端',
+      message: 'github.com/tangdiying/manage-work',
+      personal: 'Vue3 OA管理后台前端',
       time: new Date('2025-03-04'),
       color: '#ff4d4f'
-    },
-    {
-      name: 'yudao-cloud',
-      icon: 'material-symbols:cloud-outline',
-      message: 'github.com/YunaiV/yudao-cloud',
-      personal: 'Spring Cloud 微服务架构',
-      time: new Date('2025-04-05'),
-      color: '#1890ff'
-    },
-    {
-      name: 'yudao-ui-admin-vben',
-      icon: 'devicon:antdesign',
-      message: 'github.com/yudaocode/yudao-ui-admin-vben',
-      personal: 'Vue3 + vben5(antd) 管理后台',
-      time: new Date('2025-05-06'),
-      color: '#e18525'
-    },
-    {
-      name: 'yudao-ui-admin-uniapp',
-      icon: 'ant-design:mobile',
-      message: 'github.com/yudaocode/yudao-ui-admin-uniapp',
-      personal: 'Vue3 + uniapp 管理手机端',
-      time: new Date('2025-06-01'),
-      color: '#2979ff'
     }
   ]
   projects = Object.assign(projects, data)
