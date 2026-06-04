@@ -9,7 +9,7 @@ concurrency:
 on:
   push:
     branches:
-      - dev
+      - master
   workflow_dispatch: # 👈 加上这一行，就可以手动点按钮运行
 
 jobs:
