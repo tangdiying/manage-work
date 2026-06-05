@@ -57,7 +57,7 @@ jobs:
 
       # 3. 安装依赖并打包
       - name: Build Project
-        run: pnpm run build:dev
+        run: pnpm run build:prod
 
       # 4. 通过 SSH/SFTP 把打包好的 dist 目录传送到宝塔服务器
       - name: Deploy to BT Server
